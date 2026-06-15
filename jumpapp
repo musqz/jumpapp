@@ -27,7 +27,7 @@ Options:
 }
 
 main() {
-    local classid cmdid force fork=1 list passthrough focusOrMinimize in_reverse matching_title workspace_filter mouse_center no_launch
+    local classid cmdid force fork=1 list passthrough focusOrMinimize in_reverse matching_title workspace_filter mouse_center no_launch keep_workspace
 
     local OPTIND
     while getopts c:fhi:LmnNprt:wRC opt; do
