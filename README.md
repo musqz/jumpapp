@@ -4,16 +4,7 @@
 
 [![Build Status](https://travis-ci.org/mkropat/jumpapp.svg?branch=master)](https://travis-ci.org/mkropat/jumpapp)
 
-> **jumpapp-ng** — a fork of [mkropat/jumpapp](https://github.com/mkropat/jumpapp),
-> packaged for Arch Linux on the [AUR](https://aur.archlinux.org/packages/jumpapp-ng).
->
-> I created this `-ng` fork to maintain a few patches on top of upstream and make
-> them installable as an Arch package. Changes from upstream:
->
-> - **`-m`** (minimize) now implies force-launch: if no window is found it launches
->   the app, so a single keybind cycles launch → focus → minimize.
-> - Fixed a variable-scope leak: `keep_workspace` (the `-R` flag) is now declared
->   `local` in `main()`, so it can no longer be influenced by the environment.
+> **jumpapp-ng** — a fork of [mkropat/jumpapp](https://github.com/mkropat/jumpapp). See [CHANGELOG.md](CHANGELOG.md) for what differs from upstream.
 
 The idea is simple — bind a key for any given application that will:
 
