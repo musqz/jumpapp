@@ -37,7 +37,7 @@ main() {
             h) show_usage; exit 0 ;;
             i) cmdid="$OPTARG" ;;
             L) list=1 ;;
-            m) focusOrMinimize=1 ;;
+            m) focusOrMinimize=1; force=1 ;;
             n) fork='' ;;
             N) no_launch=1; ;;
             p) passthrough=1; force=1 ;; # passthrough implies force
