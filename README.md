@@ -1,4 +1,5 @@
-# jumpapp
+# jumpapp [FORK] --aur-- `jumpapp-ng`
+Personal fork: Jumpapp-ng works now also with pcmanfm daemon.
 
 *A run-or-raise application switcher for any X11 desktop*
 
