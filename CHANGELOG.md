@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-07-19
+
 ### Changed
 
 - `-m` (minimize) now implies force-launch: if no window is found it launches the
@@ -30,4 +32,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   which produced a spurious empty leading field (silently masked by
   word-splitting today, but latent). (2026-07-19)
 
-[Unreleased]: https://github.com/musqz/jumpapp/commits/master
+[Unreleased]: https://github.com/musqz/jumpapp/compare/v1.2.2...master
+[1.2.2]: https://github.com/musqz/jumpapp/compare/v1.2.1...v1.2.2
