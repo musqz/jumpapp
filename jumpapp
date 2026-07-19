@@ -268,7 +268,7 @@ get_matching_window_from_list() {
 reverse_words() {
     local i words
     IFS=' ' read -ra words
-    for ((i=${#words[@]}; i>=0; i--)); do
+    for ((i=${#words[@]}-1; i>=0; i--)); do
         printf '%s ' "${words[i]}"
     done
 }
@@ -363,9 +363,9 @@ list_pids_for_command_with_pgrep() {
 }
 
 list_pids_for_command_from_procfs() {
-    local cmd_argv0
     for path in /proc/*/cmdline; do
-        read -rd '' cmd_argv0 <"$path"
+        local cmd_argv0=''
+        read -rd '' cmd_argv0 2>/dev/null <"$path" || continue
         local cmd=${cmd_argv0##*/} # substring removal in-lined for performance
         if [[ "$cmd" == "$1"* ]]; then
             basename "${path%/cmdline}"
