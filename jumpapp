@@ -17,7 +17,8 @@ Options:
         (see Argument Passthrough in man page)
   -L -- list matching windows for COMMAND and quit
   -t NAME -- process window has to have NAME as the window title
-  -c NAME -- find window using NAME as WM_CLASS (instead of COMMAND)
+  -c NAME -- find window using NAME as WM_CLASS or Wayland app_id
+        (instead of COMMAND)
   -i NAME -- find process using NAME as the command name (instead of COMMAND)
   -w -- only find the applications in the current workspace
   -R -- bring the application to the current workspace when raising
@@ -43,7 +44,8 @@ main() {
             p) passthrough=1; force=1 ;; # passthrough implies force
             r) in_reverse=1 ;;
             t) matching_title="$OPTARG"; force=1 ;;
-            w) workspace_filter="$(get_active_workspace)"; force=1 ;;
+            w) is_wayland && die 'Error: "-w" is not supported on Wayland.'
+               workspace_filter="$(get_active_workspace)"; force=1 ;;
             R) keep_workspace=1 ;;
             C) mouse_center=1 ;;
         esac
@@ -72,6 +74,14 @@ function join_words {
 }
 
 check_for_prerequisites() {
+    if is_wayland; then
+        has_command lswt || die 'Error: lswt(1) can not be found. Please install it to continue.'
+        has_command wlrctl || die 'Error: wlrctl(1) can not be found. Please install it to continue.'
+        [[ -z "$mouse_center" ]] || die 'Error: "-C" is not supported on Wayland.'
+        [[ -z "$keep_workspace" ]] || die 'Error: "-R" is not supported on Wayland.'
+        return 0
+    fi
+
     if ! has_command wmctrl; then
         die 'Error: wmctrl(1) can not be found. Please install it to continue.'
     fi &&
@@ -177,6 +187,11 @@ where_class_or_pid_matches() {
 }
 
 where_normal_window() {
+    if is_wayland; then
+        cat
+        return
+    fi
+
     local windowid rest
     while IFS="$SEP" read -r windowid rest; do
         case "$(get_window_types "$windowid")" in \
@@ -377,6 +392,11 @@ list_pids_for_command_from_procfs() {
 #   Column spec: windowid hostname pid workspace class
 #   Where 'class' is the second WM_CLASS string (http://tronche.com/gui/x/icccm/sec-4.html#WM_CLASS)
 list_windows() {
+    if is_wayland; then
+        list_windows_wayland
+        return
+    fi
+
     local windowid workspace pid class hostname title
     while read -r windowid workspace pid hostname title; do
         class="$(xprop -id "$windowid" ' $0+\n' WM_CLASS |
@@ -386,12 +406,20 @@ list_windows() {
 }
 
 get_active_windowid() {
+    if is_wayland; then
+        get_active_windowid_wayland
+        return
+    fi
+
     local name windowid
     read name windowid < <(xprop -root ' $0\n' _NET_ACTIVE_WINDOW)
     printf '%s\n' "$windowid"
 }
 
 list_stacking_order() {
+    # no stacking order on Wayland; callers fall back to list order
+    is_wayland && return 0
+
     local name ids
     read -r name ids < <(xprop -root ' $0+\n' _NET_CLIENT_LIST_STACKING)
     if [[ "$ids" == 'not found.' ]] || [[ "$ids" =~ 'no such atom' ]]; then
@@ -419,6 +447,11 @@ get_active_workspace() {
 }
 
 change_workspace_activate_window() {
+    if is_wayland; then
+        focus_window_wayland "$1"
+        return
+    fi
+
     wmctrl -i -a "$1"
 }
 
@@ -431,7 +464,58 @@ center_cursor() {
 }
 
 minimize_active_window() {
+    if is_wayland; then
+        wlrctl_toplevel_wayland minimize "$(get_active_windowid_wayland)"
+        return
+    fi
+
     xdotool getactivewindow windowminimize
+}
+
+# Wayland windowids are 1-based positions in the lswt list: toplevels have no
+# stable numeric id or pid, so windows are addressed by app_id and title.
+# Windows without an app_id can't be targeted and are skipped.
+list_windows_wayland() {
+    local i=0 line class rest title
+    while IFS= read -r line; do
+        (( ++i ))
+        class=${line%%,*}
+        rest=${line#*,}
+        title=${rest#*,}   # title is last: it may contain commas
+        [[ -n "$class" ]] || continue
+        printf '%s\n' "$(join_words "$i" N/A 0 0 "$class" "$title")"
+    done < <(lswt -c aAt)
+}
+
+# lswt reports no activated state under ext-foreign-toplevel, so ask wlrctl.
+get_active_windowid_wayland() {
+    local windowid rest class title
+    while IFS="$SEP" read -r windowid rest rest rest class title; do
+        if wlrctl toplevel find "app_id:$class" "title:$title" state:active; then
+            printf '%s\n' "$windowid"
+            return
+        fi
+    done < <(list_windows_wayland)
+    printf '0\n'
+}
+
+wlrctl_toplevel_wayland() {
+    local action=$1 target=$2 windowid class title rest
+    while IFS="$SEP" read -r windowid rest rest rest class title; do
+        if [[ "$windowid" == "$target" ]]; then
+            wlrctl toplevel "$action" "app_id:$class" "title:$title"
+            return
+        fi
+    done < <(list_windows_wayland)
+    return 1
+}
+
+focus_window_wayland() {
+    wlrctl_toplevel_wayland focus "$1"
+}
+
+is_wayland() {
+    [[ -n "$WAYLAND_DISPLAY" ]] && { [[ -z "$DISPLAY" ]] || has_command wlrctl; }
 }
 
 has_command() {
