@@ -3,7 +3,7 @@ PREFIX = /usr/local
 BIN	= $(DESTDIR)/$(PREFIX)/bin
 MAN	= $(DESTDIR)/$(PREFIX)/share/man
 
-VERSION			= 1.2.2
+VERSION			= 1.3.0
 PACKAGE_DIR		= jumpapp-$(VERSION)
 PACKAGE_FILE		= jumpapp_$(VERSION).tar.bz2
 
