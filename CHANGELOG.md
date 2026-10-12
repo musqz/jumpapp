@@ -11,6 +11,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Support Wayland compositors via `lswt` and `wlrctl` when `$WAYLAND_DISPLAY` is set.
+- Reject `-C`, `-R` and `-w` on Wayland.
+
 ### Removed
 
 - Remove the Debian and RPM packaging and the `make deb`/`make rpm` targets.
