@@ -5,7 +5,7 @@ This file documents the changes in **jumpapp-ng**, a fork of
 the [AUR](https://aur.archlinux.org/packages/jumpapp-ng).
 
 Only changes made on top of upstream are listed here. For the upstream history,
-see `debian/changelog`.
+see the [upstream repository](https://github.com/mkropat/jumpapp).
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
@@ -15,6 +15,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Support Wayland compositors via `lswt` and `wlrctl` when `$WAYLAND_DISPLAY` is set.
 - Reject `-C`, `-R` and `-w` on Wayland.
+
+### Removed
+
+- Remove the Debian and RPM packaging and the `make deb`/`make rpm` targets.
 
 ## [1.2.2] - 2026-07-19
 

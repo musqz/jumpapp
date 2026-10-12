@@ -1,9 +1,7 @@
 # jumpapp [FORK] --aur-- `jumpapp-ng`
-Personal fork: Jumpapp-ng works now also with pcmanfm daemon.
+Personal fork for Arch and Manjaro. Works with the pcmanfm daemon and on Wayland (labwc).
 
-*A run-or-raise application switcher for any X11 desktop*
-
-[![Build Status](https://travis-ci.org/mkropat/jumpapp.svg?branch=master)](https://travis-ci.org/mkropat/jumpapp)
+*A run-or-raise application switcher for X11 and Wayland (labwc)*
 
 > **jumpapp-ng** — a fork of [mkropat/jumpapp](https://github.com/mkropat/jumpapp). See [CHANGELOG.md](CHANGELOG.md) for what differs from upstream.
 
@@ -22,7 +20,7 @@ In short, **jumpapp** is probably the fastest way for a keyboard-junkie to switc
 
     Usage: jumpapp [OPTION]... COMMAND [ARG]...
 
-    Jump to (focus) the existing window for an application, if it's running.
+    Jump to (focus) the first open window for an application, if it's running.
     Otherwise, launch COMMAND (with optional ARGs) to start the application.
 
     Options:
@@ -35,7 +33,8 @@ In short, **jumpapp** is probably the fastest way for a keyboard-junkie to switc
             (see Argument Passthrough in man page)
       -L -- list matching windows for COMMAND and quit
       -t NAME -- process window has to have NAME as the window title
-      -c NAME -- find window using NAME as WM_CLASS (instead of COMMAND)
+      -c NAME -- find window using NAME as WM_CLASS or Wayland app_id
+            (instead of COMMAND)
       -i NAME -- find process using NAME as the command name (instead of COMMAND)
       -w -- only find the applications in the current workspace
       -R -- bring the application to the current workspace when raising
@@ -45,35 +44,20 @@ In short, **jumpapp** is probably the fastest way for a keyboard-junkie to switc
 
 ## Installation
 
-### Ubuntu, Debian and Friends
-
-    sudo apt-get install build-essential debhelper git pandoc shunit2
-    git clone https://github.com/mkropat/jumpapp.git
-    cd jumpapp
-    make deb
-    sudo dpkg -i jumpapp*all.deb
-    # if there were missing dependencies
-    sudo apt-get install -f
-
-### Fedora and Friends
-
-    git clone https://github.com/mkropat/jumpapp.git
-    cd jumpapp
-    make rpm
-    sudo yum localinstall jumpapp*.noarch.rpm
-
-### Arch linux and Friends
+### Arch, Manjaro and Friends
 
 `yay` is used here but any [AUR
 helper](https://wiki.archlinux.org/title/AUR_helpers) is fine.
 
-    yay -S jumpapp
+    yay -S jumpapp-ng
 
 ### From Source
 
-    git clone https://github.com/mkropat/jumpapp.git
+    git clone https://github.com/musqz/jumpapp.git
     cd jumpapp
     make && sudo make install
+
+Dependencies: `wmctrl` on X11, `xdotool` for `-C` and `-m`, `lswt` and `wlrctl` on Wayland, `pandoc` to build the man page.
 
 ## Argument Passthrough (`-p` option)
 
@@ -91,7 +75,7 @@ include one or more ARGs, COMMAND is always executed in order to pass the ARGs
 to the running application. But if no ARGs are included, **jumpapp** will
 behave normally.
 
-## A Wrapper Around wmctrl(1)
+## X11: A Wrapper Around wmctrl(1)
 
 All the heavy lifting is done by Tomáš Stýblo's powerful
 [**wmctrl**](http://tripie.sweb.cz/utils/wmctrl/). You must have it installed to
@@ -103,7 +87,7 @@ though that it'll work on [any window manager supported by
 
 ## Wayland (labwc)
 
-When `$WAYLAND_DISPLAY` is set, **jumpapp** uses `lswt` and `wlrctl` instead of **wmctrl**.
+**jumpapp** uses `lswt` and `wlrctl` instead of **wmctrl** when `$WAYLAND_DISPLAY` is set.
 
 - Install `lswt` and `wlrctl`.
 - Windows are matched by app_id only. Use `-c NAME` if the app_id differs from COMMAND.
@@ -164,5 +148,10 @@ Example `.xbindkeysrc`:
 
 ## Uninstall jumpapp
 
-### Ubuntu, Debian and Friends
-    sudo apt remove jumpapp
+### Arch, Manjaro and Friends
+
+    sudo pacman -R jumpapp-ng
+
+### From Source
+
+    sudo make uninstall
