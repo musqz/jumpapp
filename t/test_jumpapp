@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 setUp() {
+    unset WAYLAND_DISPLAY
     active_windowid=0
     get_window_types_output=_NET_WM_WINDOW_TYPE_NORMAL
     list_pids_for_command_output=
@@ -545,6 +546,21 @@ die() {
 
 list_stacking_order() {
     printf '%s\n' "$list_stacking_order_output"
+}
+
+it_rejects_-C_on_wayland() {
+    WAYLAND_DISPLAY=wayland-0
+    unset DISPLAY
+    main -C someapp
+    assertNotNull 'die() called' "$die_called"
+}
+
+it_parses_empty_titles_and_commas_in_wayland_window_list() {
+    lswt() { printf '%s\n' 'foot,false,a, b,' ',false,noclass' 'foot,false,'; }
+    local output=$(list_windows_wayland | print_windows)
+    unset -f lswt
+    assertEquals 2 "$(printf '%s\n' "$output" | wc -l)"
+    [[ "$output" == *'a, b,'* ]] || fail "title with commas lost: $output"
 }
 
 ##### Test Harness #####

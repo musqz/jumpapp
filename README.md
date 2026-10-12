@@ -95,11 +95,21 @@ behave normally.
 
 All the heavy lifting is done by Tomáš Stýblo's powerful
 [**wmctrl**](http://tripie.sweb.cz/utils/wmctrl/). You must have it installed to
-use **jumpapp**.
+use **jumpapp** on X11.
 
 **jumpapp** was built for the GNOME desktop environment. There's a good chance
 though that it'll work on [any window manager supported by
 **wmctrl**](http://tripie.sweb.cz/utils/wmctrl/#about).
+
+## Wayland (labwc)
+
+When `$WAYLAND_DISPLAY` is set, **jumpapp** uses `lswt` and `wlrctl` instead of **wmctrl**.
+
+- Install `lswt` and `wlrctl`.
+- Windows are matched by app_id only. Use `-c NAME` if the app_id differs from COMMAND.
+- `-i` has no effect. `-C`, `-R` and `-w` are rejected.
+
+Note: cycling follows list order. Two windows with the same app_id and title can't be told apart.
 
 ## XBindKeys
 
