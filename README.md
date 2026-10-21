@@ -53,7 +53,7 @@ helper](https://wiki.archlinux.org/title/AUR_helpers) is fine.
 
 ### From Source
 
-    git clone https://github.com/musqz/jumpapp.git
+    git clone https://codeberg.org/linux-bird/jumpapp.git
     cd jumpapp
     make && sudo make install
 
