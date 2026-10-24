@@ -1,6 +1,3 @@
-> **This repository has moved to Codeberg: https://codeberg.org/linux-bird/jumpapp**
-> It is archived here. Please use Codeberg for issues and pull requests.
-
 # jumpapp [FORK] --aur-- `jumpapp-ng`
 Personal fork for Arch and Manjaro. Works with the pcmanfm daemon and on Wayland (labwc).
 
@@ -56,7 +53,7 @@ helper](https://wiki.archlinux.org/title/AUR_helpers) is fine.
 
 ### From Source
 
-    git clone https://github.com/musqz/jumpapp.git
+    git clone https://codeberg.org/linux-bird/jumpapp.git
     cd jumpapp
     make && sudo make install
 
