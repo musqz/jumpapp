@@ -482,6 +482,7 @@ list_windows_wayland() {
         class=${line%%,*}
         rest=${line#*,}
         title=${rest#*,}   # title is last: it may contain commas
+        title=${title//\\,/,}   # lswt writes a comma in a title as \,
         [[ -n "$class" ]] || continue
         printf '%s\n' "$(join_words "$i" N/A 0 0 "$class" "$title")"
     done < <(lswt -c aAt)
