@@ -563,6 +563,14 @@ it_parses_empty_titles_and_commas_in_wayland_window_list() {
     [[ "$output" == *'a, b,'* ]] || fail "title with commas lost: $output"
 }
 
+it_unescapes_commas_in_wayland_window_titles() {
+    lswt() { printf '%s\n' 'waterfox,false,fix: a\, b'; }
+    local output=$(list_windows_wayland | print_windows)
+    unset -f lswt
+    [[ "$output" == *'fix: a, b'* ]] || fail "comma still escaped: $output"
+    [[ "$output" != *'\'* ]] || fail "backslash left in title: $output"
+}
+
 ##### Test Harness #####
 
 # suite() -- find and register tests to be run
