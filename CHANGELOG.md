@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.3.1] - 2026-11-19
+
 ### Fixed
 
 - Focus Wayland windows whose title contains a comma.
@@ -47,6 +49,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   which produced a spurious empty leading field (silently masked by
   word-splitting today, but latent). (2026-07-19)
 
-[Unreleased]: https://github.com/musqz/jumpapp/compare/v1.3.0...master
+[Unreleased]: https://github.com/musqz/jumpapp/compare/v1.3.1...master
+[1.3.1]: https://github.com/musqz/jumpapp/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/musqz/jumpapp/compare/v1.2.2...v1.3.0
 [1.2.2]: https://github.com/musqz/jumpapp/compare/v1.2.1...v1.2.2
